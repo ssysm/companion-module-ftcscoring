@@ -1,26 +1,26 @@
 {
-	"id": "your-module-name",
-	"name": "your-module-name",
-	"shortname": "module-shortname",
-	"description": "A short one line description of your module",
-	"version": "0.0.0",
+	"id": "ftc-scoring",
+	"name": "FTC Scorekeeper Connector Module",
+	"shortname": "FTC Scorekeeper Connector",
+	"description": "A module for connecting to FTC Scoring System",
+	"version": "1.0.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-your-module-name.git",
-	"bugs": "https://github.com/bitfocus/companion-module-your-module-name/issues",
+	"repository": "git+https://github.com/ssysm/companion-module-ftcscoring.git",
+	"bugs": "https://github.com/ssysm/companion-module-ftcscoring/issues",
 	"maintainers": [
 		{
-			"name": "Your name",
-			"email": "Your email"
+			"name": "Shengming Yuan",
+			"email": "sqy5338@psu.edu"
 		}
 	],
 	"runtime": {
 		"type": "node18",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
-		"entrypoint": "../main.js"
+		"entrypoint": "../dist/main.js"
 	},
 	"legacyIds": [],
-	"manufacturer": "Your company",
-	"products": ["Your product"],
-	"keywords": []
+	"manufacturer": "FIRST Tech Challenge",
+	"products": ["Scorekeeper API"],
+	"keywords": ["FTC", "FIRST"]
 }
