@@ -3,11 +3,12 @@
 	"version": "1.0.0",
 	"main": "dist/main.js",
 	"scripts": {
-		"format": "prettier -w .",
+		"format": "prettier --config .prettierrc 'src/**/*.ts' --write",
 		"dev": "yarn build:main --watch",
 		"build": "rimraf dist && yarn build:main",
 		"build:main": "tsc -p tsconfig.build.json",
-		"dist": "yarn companion-module-build"
+		"dist": "yarn companion-module-build",
+		"lint": "eslint . --ext .ts"
 	},
 	"license": "MIT",
 	"repository": {
@@ -22,13 +23,12 @@
 		"@companion-module/tools": "^1.4.1",
 		"@types/node": "^20.9.0",
 		"@types/ws": "^8.5.9",
+		"@typescript-eslint/eslint-plugin": "^6.13.1",
+		"@typescript-eslint/parser": "^6.13.1",
+		"eslint": "^8.55.0",
 		"rimraf": "^5.0.5",
 		"ts-node": "^10.9.1",
-		"typescript": "^5.2.2"
-	},
-	"prettier": {
-		"filepath": "@companion-module/tools/.prettierrc.json",
-		"semi": true
+		"typescript": "^5.3.2"
 	},
 	"engines": {
 		"node": "^18.12"

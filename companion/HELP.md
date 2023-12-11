@@ -1,3 +1,3 @@
-## Your module
+# FIRST Tech Challenge - Scoring API Connector
 
-Write some help for your users here!
+Please refer to [Github](https://github.com/ssysm/companion-module-ftcscoring) for help and support.

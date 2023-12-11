@@ -2,7 +2,7 @@ import WebSocket from "ws";
 import { CLOUD_FMS_HOST, type FMSConfig } from "./config";
 import type { InstanceBaseExt } from "./util";
 import { InstanceStatus } from "@companion-module/base";
-import { FMSUpdatePayload, FMSUpdateType } from './types/FMSTypes';
+import { FMSUpdatePayload, FMSUpdateType } from "./types/FMSTypes";
 
 const KEEP_ALIVE_ACCEPTABLE_DELAY = 10 * 1000; // 10 seconds
 
@@ -10,7 +10,7 @@ export default class FMSSystem {
   private websocketInstance: WebSocket | undefined;
   private instance: InstanceBaseExt<FMSConfig>;
 
-  private lastUpdatedPong: number = 0;
+  private lastUpdatedPong = 0;
   private keepAliveCheckerInterval: NodeJS.Timeout | undefined;
 
   constructor(instance: InstanceBaseExt<FMSConfig>) {
@@ -48,11 +48,11 @@ export default class FMSSystem {
 
   public reloadFMSConnection = () => {
     if (this.websocketInstance !== undefined) {
-      this.websocketInstance.close();    
+      this.websocketInstance.close();
     }
     this.websocketInstance = undefined;
     this.connectFMS(this.instance);
-  }
+  };
 
   private WebSocketCloseHandler = () => {
     this.websocketInstance = undefined;
@@ -67,7 +67,7 @@ export default class FMSSystem {
     this.instance.log("error", "Error with FMS: " + error.message);
     this.instance.updateStatus(InstanceStatus.ConnectionFailure);
     clearInterval(this.keepAliveCheckerInterval);
-    
+
     // Try to reconnect
     this.instance.log("info", "Attempting to reconnect to FMS...");
     this.reloadFMSConnection();
@@ -80,10 +80,10 @@ export default class FMSSystem {
 
   private websocketMessageHandler = (message: WebSocket.Data) => {
     this.instance.log("debug", "Message from FMS: " + message);
-    
+
     const payload = message.toString();
 
-    if (payload === 'pong') {
+    if (payload === "pong") {
       this.socketPongHandler();
       return;
     }
@@ -99,52 +99,73 @@ export default class FMSSystem {
     this.lastUpdatedPong = parsedUpdate.updateTime;
   };
 
-  private fieldUpdateHandler = (updatePayload: FMSUpdatePayload) => { 
-    this.instance.log('debug', `Handling update type: ${updatePayload.updateType}`);
+  private fieldUpdateHandler = (updatePayload: FMSUpdatePayload) => {
+    this.instance.log(
+      "debug",
+      `Handling update type: ${updatePayload.updateType}`
+    );
     switch (updatePayload.updateType) {
       case FMSUpdateType.MATCH_LOAD:
         this.instance.setVariableValues({
-          'loaded_match_field': updatePayload.payload.field,
+          loaded_match_field: updatePayload.payload.field,
         });
-        this.instance.log('info', `Loaded match ${updatePayload.payload.number} on field ${updatePayload.payload.field}`);
+        this.instance.log(
+          "info",
+          `Loaded match ${updatePayload.payload.number} on field ${updatePayload.payload.field}`
+        );
         break;
       case FMSUpdateType.SHOW_RANDOM:
       case FMSUpdateType.SHOW_MATCH:
       case FMSUpdateType.MATCH_START:
         this.instance.setVariableValues({
-          'active_field': updatePayload.payload.field,
-          'active_match': updatePayload.payload.number,
-          'active_match_status': updatePayload.updateType,
+          active_field: updatePayload.payload.field,
+          active_match: updatePayload.payload.number,
+          active_match_status: updatePayload.updateType,
         });
-        this.instance.log('info', `Started match ${updatePayload.payload.number} on field ${updatePayload.payload.field}`);
+        this.instance.log(
+          "info",
+          `Started match ${updatePayload.payload.number} on field ${updatePayload.payload.field}`
+        );
         break;
       case FMSUpdateType.MATCH_ABORT:
         this.instance.setVariableValues({
-          'active_match': updatePayload.payload.number,
-          'active_match_status': updatePayload.updateType,
+          active_match: updatePayload.payload.number,
+          active_match_status: updatePayload.updateType,
         });
-        this.instance.log('info', `Aborted match ${updatePayload.payload.number}`);
+        this.instance.log(
+          "info",
+          `Aborted match ${updatePayload.payload.number}`
+        );
         break;
       case FMSUpdateType.MATCH_COMMIT:
         // TODO: Add commit logic
-        this.instance.log('info', `Committed match ${updatePayload.payload.number}`);
+        this.instance.log(
+          "info",
+          `Committed match ${updatePayload.payload.number}`
+        );
         break;
       case FMSUpdateType.MATCH_POST:
         // TODO: Add post logic
-        this.instance.log('info', `Posted match ${updatePayload.payload.number}`);
+        this.instance.log(
+          "info",
+          `Posted match ${updatePayload.payload.number}`
+        );
         break;
       default:
-        this.instance.log('warn', `Unknown update type: ${updatePayload.updateType}`);
+        this.instance.log(
+          "warn",
+          `Unknown update type: ${updatePayload.updateType}`
+        );
         break;
     }
-  }
+  };
 
   private socketPongHandler = () => {
     if (this.websocketInstance === undefined) {
       return;
     }
     // this.websocketInstance.ping();
-  }
+  };
 
   private keepAliveChecker = () => {
     if (this.websocketInstance === undefined) {
@@ -156,8 +177,8 @@ export default class FMSSystem {
       this.websocketInstance.close();
       this.websocketInstance = undefined;
       this.connectFMS(this.instance);
-    }else{
+    } else {
       this.instance.log("debug", "FMS connection is alive");
     }
-  }
+  };
 }

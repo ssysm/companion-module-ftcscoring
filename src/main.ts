@@ -13,9 +13,9 @@ import FMSSystem from "./FMS";
 
 class ModuleInstance extends InstanceBase<FMSConfig> {
   public config: FMSConfig;
-  
+
   private FMSInstance: FMSSystem;
-  
+
   constructor(internal: unknown) {
     super(internal);
     this.config = {
@@ -63,7 +63,7 @@ class ModuleInstance extends InstanceBase<FMSConfig> {
   }
 
   updateVariableDefinitions() {
-    UpdateVariableDefinitions(this)
+    void UpdateVariableDefinitions(this);
   }
 }
 
